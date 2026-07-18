@@ -1,4 +1,5 @@
 const http = require("http");
+const fs = require('fs');
 const server = http.createServer((req, res) => {
   console.log("URL:", req.url);
   console.log("Method:", req.method);
@@ -25,21 +26,25 @@ const server = http.createServer((req, res) => {
       </body>
     </html>
   `);
-  } else if (req.url === "/about") {
-    res.writeHead(200, {
-      "Content-Type": "text/html",
-    });
+  } else if (req.url.toLowerCase() === "/about" && req.method === "POST") {
+    // res.writeHead(302, {
+    //   "Content-Type": "text/html",
+    // });
 
-    res.end(`
-    <html>
-      <head>
-        <title>about page</title>
-      </head>
-      <body>
-        <h1>About!</h1>
-      </body>
-    </html>
-  `);
+    //   res.end(`
+    //   <html>
+    //     <head>
+    //       <title>about page</title>
+    //     </head>
+    //     <body>
+    //       <h1>About!</h1>
+    //     </body>
+    //   </html>
+    // `);
+
+    fs.writeFileSync("UserActivation.txt", 'Saber Data Pathaise ');
+    res.end()
+
   } else {
     res.writeHead(300, {
       "Content-Type": "text/html",
@@ -52,7 +57,7 @@ const server = http.createServer((req, res) => {
       </head>
       <body>
         <h1>Onno jaygayi ghuiro na!</h1>
-        <form action="/submit-details" method="POST">
+        <form action="/about" method="POST">
           <label for="userName">Name</label>
           <input type="text" name= "userName" placeholder = "Enter your name"/><br>
           <label for="male">male</label>

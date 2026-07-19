@@ -1,5 +1,5 @@
 const http = require("http");
-const fs = require('fs');
+const fs = require("fs");
 const server = http.createServer((req, res) => {
   console.log("URL:", req.url);
   console.log("Method:", req.method);
@@ -24,25 +24,48 @@ const server = http.createServer((req, res) => {
       "Content-Type": "text/html",
     });
 
-    res.write('<html><head><title>about page</title></head><body><h1>About!</h1></body></html >')
+    res.write(
+      "<html><head><title>about page</title></head><body><h1>About!</h1></body></html >",
+    );
 
     //COntents of day 5
 
     // store chuncks in body
-    const body = [];
-    req.on('data', chunk => {
-      console.log(chunk);
-      body.push(chunk);
-    })
+    // const body = [];
+    // req.on("data", (chunk) => {
+    //   console.log(chunk);
+    //   body.push(chunk);
+    // });
     // on end concat the stored chunks and sringify
-    req.on('end', () => {
-      const parsedBody = Buffer.concat(body).toString();
-      console.log("Parsed body:", parsedBody)
+    // req.on("end", () => {
+    //   const fullBody = Buffer.concat(body).toString();//gives the buffer in a fully concating string
+    //   console.log("Parsed body:", fullBody);
 
+    //   const params = new URLSearchParams(fullBody); // decodes the fullbody as object
+    //   console.log("params:", params);
+    //   // const bodyObj = {};
+    //   // for (const [key, val] of params.entries()) { // build the key value json form the decoded full body 
+    //   //   bodyObj[key] = val;
+    //   // }
+
+    //   const bodyObj  = Object.fromEntries(params)
+    //   fs.writeFileSync("UserActivation.txt", bodyObj);
+    //   console.log("Body Object Req:", JSON.stringify(bodyObj));
+    // });
+
+    const body = [];
+    req.on("data",(chunk)=>{
+      body.push(chunk)
     })
-    fs.writeFileSync("UserActivation.txt", 'Saber Data Pathaise ');
-    res.end()
-
+    req.on("end",()=>{
+      const fullData = Buffer.concat(body).toString();
+      console.log("Full data:", fullData);
+      const paramsData = new URLSearchParams(fullData);
+      const dataObj = Object.fromEntries(paramsData);
+      console.log("Data Obj:",dataObj);
+      fs.writeFileSync("Request Data.txt",JSON.stringify(dataObj));
+    })
+    res.end();
   } else {
     res.writeHead(300, {
       "Content-Type": "text/html",
